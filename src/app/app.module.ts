@@ -5,29 +5,26 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
 // Components
-import { AboutPage } from '../pages/about/about';
 import { UploadPage } from '../pages/upload/upload';
-import { HomePage } from '../pages/home/home';
-import { TabsPage } from '../pages/tabs/tabs';
 
 // Ionic Native
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { FileChooser } from '@ionic-native/file-chooser';
 import { FileTransfer } from '@ionic-native/file-transfer';
+import { FilePath } from "@ionic-native/file-path";
 import { File } from '@ionic-native/file';
 
 // Services
 import { UploadService } from '../services/upload.service';
 import { ParserService } from '../services/parser.service';
 
+import { AndroidPermissions } from '@ionic-native/android-permissions';
+
 @NgModule({
   declarations: [
     MyApp,
-    AboutPage,
     UploadPage,
-    HomePage,
-    TabsPage
   ],
   imports: [
     BrowserModule,
@@ -36,10 +33,7 @@ import { ParserService } from '../services/parser.service';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    AboutPage,
     UploadPage,
-    HomePage,
-    TabsPage
   ],
   providers: [
     StatusBar,
@@ -48,8 +42,10 @@ import { ParserService } from '../services/parser.service';
     File,
     FileChooser,
     FileTransfer,
+    FilePath,
     UploadService,
-    ParserService
+    ParserService,
+    AndroidPermissions
   ]
 })
 export class AppModule {}
