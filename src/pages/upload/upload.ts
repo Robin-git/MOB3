@@ -1,73 +1,45 @@
-import { Component } from "@angular/core";
-import {
-  NavController,
-  LoadingController,
-  ToastController
-} from "ionic-angular";
-import { FileChooser } from "@ionic-native/file-chooser";
+import { Component, OnInit } from "@angular/core";
 
-import {
-  FileTransfer,
-  FileTransferObject
-} from "@ionic-native/file-transfer";
-
-import { File } from '@ionic-native/file';
+import { UploadService } from "../../services/upload.service";
+import { Refresher } from "ionic-angular/components/refresher/refresher";
 
 @Component({
   selector: "page-upload",
   templateUrl: "upload.html"
 })
-export class UploadPage {
-  Err: any;
-  imgURI: string;
-  imgFileName: string;
+export class UploadPage implements OnInit {
+  dataList: string[] = [];
 
   constructor(
-    public navCtrl: NavController,
-    public loadCtrl: LoadingController,
-    private transfer: FileTransfer,
-    private fileChooser: FileChooser,
-    private file: File,
-    public toastCtrl: ToastController
+    private uploadService: UploadService
   ) {}
 
-  upload() {
-    let loader = this.loadCtrl.create({
-      content: "Uploading..."
-    });
-    loader.present();
-
-    const fileTransfer: FileTransferObject = this.transfer.create();
-
-    this.fileChooser
-      .open()
-      .then(uri => {
-        this.imgURI = uri
-        fileTransfer.download(uri, this.file.dataDirectory + 'file.jpeg').then(
-          data => {
-            loader.dismiss();
-            this.presentToast("Image uploaded successfully");
-          },
-          err => {
-            this.Err = this.imgURI;
-            loader.dismiss();
-          }
-        );
-      })
-      .catch(e => this.Err = e);
+  ngOnInit() {
+    this.uploadService
+      .checkDataDirectoryIsExist()
+      .then(() => this.updateDataList());
   }
 
-  presentToast(msg) {
-    let toast = this.toastCtrl.create({
-      message: msg,
-      duration: 3000,
-      position: 'bottom'
-    });
-  
-    toast.onDidDismiss(() => {
-      console.log('Dismissed toast');
-    });
-  
-    toast.present();
+  upload(): Promise<void> {
+    return this.uploadService.upload().then(() => this.updateDataList());
+  }
+
+  delete(item: string): Promise<void> {
+    return this.uploadService.delete(item).then(() => this.updateDataList());
+  }
+
+  goToStat(item: string) {
+    console.log(item);
+  }
+
+  private updateDataList(refresher?: Refresher): Promise<void> {
+    return this.uploadService
+      .getDataList()
+      .then(data => { 
+        if (refresher) {
+          refresher.complete();
+        }
+        this.dataList = data.map(value => value.name)
+      });
   }
 }

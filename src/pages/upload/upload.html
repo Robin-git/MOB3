@@ -1,20 +1,30 @@
 <ion-header>
     <ion-navbar>
-        <ion-title>Uploader</ion-title>
+        <ion-title>Liste des fichiers</ion-title>
     </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-    <ion-item>
-        <p>{{ imageURI }}</p>
-        <button ion-button color="secondary" (click)="upload()">Get Image</button>
-    </ion-item>
-    <ion-item>
-        <h4>Image Preview</h4>
-        <img src="{{imageURI}}" *ngIf="imageURI" alt="Ionic File" width="300" />
-    </ion-item>
-    <ion-item>
-        <button ion-button (click)="uploadFile()">Upload</button>
-    </ion-item>
-    <p *ngIf="Err">{{ Err | json }}</p>
+    <ion-refresher (ionRefresh)="updateDataList($event)">
+        <ion-refresher-content>
+        </ion-refresher-content>
+    </ion-refresher>
+
+    <ion-list>
+        <ion-item-sliding *ngFor="let item of dataList">
+            <button ion-item (click)="goToStat(item)">
+                {{item}}
+            </button>
+            <ion-item-options side="left">
+                <button ion-button icon-trash color="danger" (click)="delete(item)">
+                    <ion-icon name="archive"></ion-icon>
+                    Delete
+                </button>
+            </ion-item-options>
+        </ion-item-sliding>
+    </ion-list>
+
+    <ion-fab style="position: fixed; top: 2em; right: 2em;">
+        <ion-icon ion-fab mini name="download" (click)="upload()">Button</ion-icon>
+    </ion-fab>
 </ion-content>
