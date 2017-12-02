@@ -5,10 +5,19 @@
 </ion-header>
 
 <ion-content padding>
+
+    <ion-fab top right edge>
+        <button ion-fab (click)="upload()">
+            <ion-icon name="download"></ion-icon>
+        </button>
+    </ion-fab>
+
     <ion-refresher (ionRefresh)="updateDataList($event)">
         <ion-refresher-content>
         </ion-refresher-content>
     </ion-refresher>
+
+    <p *ngIf="dataList.length == 0">Aucun fichier importé...</p>
 
     <ion-list>
         <ion-item-sliding *ngFor="let item of dataList">
@@ -18,13 +27,10 @@
             <ion-item-options side="left">
                 <button ion-button icon-trash color="danger" (click)="delete(item)">
                     <ion-icon name="archive"></ion-icon>
-                    Delete
+                    Supprimer
                 </button>
             </ion-item-options>
         </ion-item-sliding>
     </ion-list>
 
-    <ion-fab style="position: fixed; top: 2em; right: 2em;">
-        <ion-icon ion-fab mini name="download" (click)="upload()">Button</ion-icon>
-    </ion-fab>
 </ion-content>
