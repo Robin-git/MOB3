@@ -1,7 +1,8 @@
 import { Component, OnInit } from "@angular/core";
+import { Refresher } from "ionic-angular/components/refresher/refresher";
 
 import { UploadService } from "../../services/upload.service";
-import { Refresher } from "ionic-angular/components/refresher/refresher";
+import { ParserService } from "../../services/parser.service";
 
 @Component({
   selector: "page-upload",
@@ -11,7 +12,8 @@ export class UploadPage implements OnInit {
   dataList: string[] = [];
 
   constructor(
-    private uploadService: UploadService
+    private uploadService: UploadService,
+    private parserService: ParserService
   ) {}
 
   ngOnInit() {
@@ -29,7 +31,9 @@ export class UploadPage implements OnInit {
   }
 
   goToStat(item: string) {
-    console.log(item);
+    this.parserService.parserFile(item).then(
+      data => console.log(data)
+    );
   }
 
   private updateDataList(refresher?: Refresher): Promise<void> {
