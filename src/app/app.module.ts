@@ -19,8 +19,6 @@ import { File } from '@ionic-native/file';
 import { UploadService } from '../services/upload.service';
 import { ParserService } from '../services/parser.service';
 
-import { AndroidPermissions } from '@ionic-native/android-permissions';
-
 @NgModule({
   declarations: [
     MyApp,
@@ -44,8 +42,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions';
     FileTransfer,
     FilePath,
     UploadService,
-    ParserService,
-    AndroidPermissions
+    ParserService
   ]
 })
 export class AppModule {}
