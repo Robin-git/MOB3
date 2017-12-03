@@ -18,6 +18,11 @@ import { File } from '@ionic-native/file';
 // Services
 import { UploadService } from '../services/upload.service';
 import { ParserService } from '../services/parser.service';
+import { InteractionService } from '../services/interaction.service';
+import { ErrorService } from '../services/error.service';
+
+// Module
+import { TableAnalysisPageModule } from '../pages/table-analysis/table-analysis.module';
 
 @NgModule({
   declarations: [
@@ -26,6 +31,7 @@ import { ParserService } from '../services/parser.service';
   ],
   imports: [
     BrowserModule,
+    TableAnalysisPageModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -42,7 +48,9 @@ import { ParserService } from '../services/parser.service';
     FileTransfer,
     FilePath,
     UploadService,
-    ParserService
+    ParserService,
+    InteractionService,
+    ErrorService
   ]
 })
 export class AppModule {}
