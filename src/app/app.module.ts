@@ -18,8 +18,11 @@ import { File } from '@ionic-native/file';
 // Services
 import { UploadService } from '../services/upload.service';
 import { ParserService } from '../services/parser.service';
+import { InteractionService } from '../services/interaction.service';
+import { ErrorService } from '../services/error.service';
 
-import { AndroidPermissions } from '@ionic-native/android-permissions';
+// Module
+import { TableAnalysisPageModule } from '../pages/table-analysis/table-analysis.module';
 
 @NgModule({
   declarations: [
@@ -28,6 +31,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions';
   ],
   imports: [
     BrowserModule,
+    TableAnalysisPageModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -45,7 +49,8 @@ import { AndroidPermissions } from '@ionic-native/android-permissions';
     FilePath,
     UploadService,
     ParserService,
-    AndroidPermissions
+    InteractionService,
+    ErrorService
   ]
 })
 export class AppModule {}

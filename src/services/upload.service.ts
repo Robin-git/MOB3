@@ -1,29 +1,22 @@
 import { Injectable } from "@angular/core";
 
 import { File, Entry, DirectoryEntry } from "@ionic-native/file";
-import { FileChooser } from "@ionic-native/file-chooser";
 import { FilePath } from "@ionic-native/file-path";
-import { Loading, LoadingController, ToastController } from "ionic-angular";
+
+import { ParserService } from "./parser.service";
+import { ErrorList } from "./error.service";
+import { Config } from "./config";
 
 @Injectable()
 export class UploadService {
-  public Directory: string = "data";
-  public loader: Loading;
+  private DATADIR: string;
 
   constructor(
     private file: File,
-    private fileChooser: FileChooser,
     private filePath: FilePath,
-    private loadCtrl: LoadingController,
-    public toastCtrl: ToastController
-  ) {}
-
-  /**
-   * Return full name of Data Directory of application.
-   * @return {string}
-   */
-  get DataDirectory(): string {
-    return this.file.dataDirectory + this.Directory;
+    private parserService: ParserService
+  ) {
+    this.DATADIR = Config.DATADIR(this.file);
   }
 
   /**
@@ -31,7 +24,7 @@ export class UploadService {
    * @return {Promise<Entry[]>}
    */
   getDataList(): Promise<Entry[]> {
-    return this.file.listDir(this.file.dataDirectory, "data");
+    return this.file.listDir(this.file.dataDirectory, Config.DIR);
   }
 
   /**
@@ -40,13 +33,12 @@ export class UploadService {
    */
   async checkDataDirectoryIsExist(): Promise<DirectoryEntry | Error> {
     try {
-      await this.file.checkDir(this.file.dataDirectory, this.Directory);
+      await this.file.checkDir(this.file.dataDirectory, Config.DIR);
     } catch (err) {
-      console.log(err)
-      if (err.message == "NOT_FOUND_ERR") { 
+      if (err.message == "NOT_FOUND_ERR") {
         return await this.file.createDir(
           this.file.dataDirectory,
-          this.Directory,
+          Config.DIR,
           false
         );
       }
@@ -57,32 +49,27 @@ export class UploadService {
    * Open file chooser and copy file into DataDirectory of application.
    * @return {Promise<string | Error>}
    */
-  async upload(): Promise<void | Error> {
+  async upload(uri: string): Promise<Entry> {
     try {
-      const uri = await this.fileChooser.open();
-      this.presentLoader("Importation...");
       const filePath = await this.file.resolveLocalFilesystemUrl(uri);
       const url = await this.filePath.resolveNativePath(filePath.toURL());
       const correctPath = url.substr(0, url.lastIndexOf("/") + 1);
       const currentName = url.substr(url.lastIndexOf("/") + 1);
       if (currentName.split(".").pop() != "his") {
-        this.loader.dismiss();
-        this.presentToast(
-          "Impossible d'importer le fichier, seule les fichiers '.his' sont autorisés."
-        );
-        return;
+        throw new Error(ErrorList.EXTENSION_FILE_ERR);
       }
-      await this.file.copyFile(
+      const dateName = await this.parserService.getDateOfFile(
+        currentName,
+        correctPath
+      );
+      return await this.file.copyFile(
         correctPath,
         currentName,
-        this.DataDirectory,
-        this.generateFileName()
+        this.DATADIR,
+        this.generateFileName(dateName)
       );
-      this.loader.dismiss();
-      this.presentToast("Le fichier à bien était importé.");
     } catch (err) {
-      console.log(err);
-      return err;
+      throw err;
     }
   }
 
@@ -92,54 +79,26 @@ export class UploadService {
    */
   async delete(item: string): Promise<void | Error> {
     try {
-      this.presentLoader("Suppression...");
-      await this.file.removeFile(this.DataDirectory, item);
-      this.presentToast(`Le fichier ${item} à bien étais supprimé !`);
+      await this.file.removeFile(this.DATADIR, item);
     } catch (err) {
-      this.presentToast(`Une erreur est survenue !`);
-      console.log(err);
+      throw new Error(ErrorList.STANDARD_ERR);
     }
-    this.loader.dismiss();
   }
 
   /**
-   * Generate name of file
-   * @example generateFileName()
+   * Generate name of file white date
+   * @param date {Date}
+   * @example generateFileName(new Date(2017-02-02 00:00:00))
    * 02-02-2017.his
    * @return {string}
    */
-  generateFileName(): string {
+  generateFileName(date: Date): string {
     function pad(s) {
       return s < 10 ? "0" + s : s;
     }
-    const d = new Date();
-    const day = pad(d.getDate());
-    const month = pad(d.getMonth() + 1);
-    const year = d.getFullYear();
+    const day = pad(date.getDate());
+    const month = pad(date.getMonth() + 1);
+    const year = date.getFullYear();
     return [day, month, year].join("-") + ".his";
-  }
-
-  /**
-   * Create and present toast
-   * @param msg {string}
-   */
-  public presentToast(msg: string) {
-    const toast = this.toastCtrl.create({
-      message: msg,
-      duration: 3000,
-      position: "bottom"
-    });
-    toast.present();
-  }
-
-  /**
-   * Create and present loader
-   * @param msg {string}
-   */
-  public presentLoader(msg: string) {
-    this.loader = this.loadCtrl.create({
-      content: msg
-    });
-    this.loader.present();
   }
 }
