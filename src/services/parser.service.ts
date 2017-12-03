@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 
 import { File } from "@ionic-native/file";
+import { ErrorList } from "./error.service";
 import { Config } from "./config";
 
 @Injectable()
@@ -21,8 +22,7 @@ export class ParserService {
       const data = await this.parserFile(file, path);
       return new Date(data[2][0]);
     } catch (err) {
-      console.log(JSON.stringify(err));
-      return err;
+      throw err;
     }
   }
 
@@ -38,9 +38,13 @@ export class ParserService {
       }
       const buff = await this.file.readAsBinaryString(path, file);
       const row = buff.split("\n");
-      return row.map(r => r.split("\t"));
+      const data = row.map(r => r.split("\t"));
+      if (data[1][0] != "CREATEDATE") {
+        throw new Error(ErrorList.CANNOT_READ_FILE_ERR);
+      }
+      return data;
     } catch (err) {
-      console.log(JSON.stringify(err));
+      throw err;
     }
   }
 }
