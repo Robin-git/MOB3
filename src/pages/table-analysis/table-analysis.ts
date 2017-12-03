@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavParams } from 'ionic-angular';
+import { Component } from "@angular/core";
+import { IonicPage, NavParams } from "ionic-angular";
 
-import { InteractionService } from '../../services/interaction.service';
-import { ParserService } from '../../services/parser.service';
+import { InteractionService } from "../../services/interaction.service";
+import { ParserService } from "../../services/parser.service";
+import { AnalysisService, Analysis } from "../../services/analysis.service";
 
 /**
  * Generated class for the TableAnalysisPage page.
@@ -12,27 +13,32 @@ import { ParserService } from '../../services/parser.service';
  */
 @IonicPage()
 @Component({
-  selector: 'page-table-analysis',
-  templateUrl: 'table-analysis.html',
+  selector: "page-table-analysis",
+  templateUrl: "table-analysis.html"
 })
 export class TableAnalysisPage {
-
   fileSelected: string;
+  analysises: Analysis[] = [];
 
   constructor(
     private navParams: NavParams,
     private uiService: InteractionService,
-    private parserService: ParserService
+    private parserService: ParserService,
+    private analysisService: AnalysisService
   ) {
-    this.fileSelected = this.navParams.get('file');
+    this.fileSelected = this.navParams.get("file");
   }
 
   async ionViewDidLoad() {
     try {
       this.uiService.presentLoader("Analyse du fichier en cours...");
-      await this.parserService.parserFile(this.fileSelected);
-      this.uiService.presentToast("Fichier lue avec success")
+      const allData = await this.parserService.parserFile(this.fileSelected);
+      this.analysises = this.analysisService
+        .formatData(allData)
+        .sort(this.sortAnalysis);
+      this.uiService.presentToast("Fichier analysé avec succés !");
     } catch (err) {
+      console.log(err.message);
       if (err.message == "CANNOT_READ_FILE") {
         this.uiService.presentToast("Impossible de lire le fichier");
       }
@@ -41,4 +47,9 @@ export class TableAnalysisPage {
     }
   }
 
+  private sortAnalysis(a: Analysis, b: Analysis) {
+    if (a.name < b.name) return -1;
+    if (a.name > b.name) return 1;
+    return 0;
+  }
 }

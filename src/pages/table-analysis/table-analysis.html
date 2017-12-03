@@ -15,4 +15,23 @@
 
 <ion-content padding>
 
+    <ion-grid>
+        <ion-row>
+          <ion-col col-3>Nom de l'analyse</ion-col>
+          <ion-col col-1>Min</ion-col>
+          <ion-col col-2>Heure du min</ion-col>
+          <ion-col col-3>Moyenne de la journée</ion-col>
+          <ion-col col-1>Max</ion-col>
+          <ion-col col-2>Heure du max</ion-col>
+        </ion-row>
+        <ion-row *ngFor="let analysis of analysises">
+          <ion-col col-3>{{ analysis.name }}</ion-col>
+          <ion-col col-1>{{ analysis.data.min }}</ion-col>
+          <ion-col col-2>{{ analysis.data.dateMin }}</ion-col>
+          <ion-col col-3>{{ analysis.data.average | number : '1.2-2' }}</ion-col>
+          <ion-col col-1>{{ analysis.data.max }}</ion-col>
+          <ion-col col-2>{{ analysis.data.dateMax }}</ion-col>
+        </ion-row>
+      </ion-grid>
+
 </ion-content>
