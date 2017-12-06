@@ -1,9 +1,10 @@
 import { Component } from "@angular/core";
-import { IonicPage, NavParams } from "ionic-angular";
+import { IonicPage, NavParams, NavController } from "ionic-angular";
 
 import { InteractionService } from "../../services/interaction.service";
 import { ParserService } from "../../services/parser.service";
 import { AnalysisService, Analysis } from "../../services/analysis.service";
+import { ChartPage } from "../chart/chart";
 
 /**
  * Generated class for the TableAnalysisPage page.
@@ -24,9 +25,17 @@ export class TableAnalysisPage {
     private navParams: NavParams,
     private uiService: InteractionService,
     private parserService: ParserService,
-    private analysisService: AnalysisService
+    private analysisService: AnalysisService,
+    private navCtrl: NavController
   ) {
     this.fileSelected = this.navParams.get("file");
+  }
+
+  /**
+   * Push ChartPage onto the navigation stack.
+   */
+  goToChart() {
+    this.navCtrl.push(ChartPage, { file: this.fileSelected });
   }
 
   async ionViewDidLoad() {

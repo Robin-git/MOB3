@@ -23,6 +23,9 @@ import { ErrorService } from '../services/error.service';
 
 // Module
 import { TableAnalysisPageModule } from '../pages/table-analysis/table-analysis.module';
+import { ChartPageModule } from '../pages/chart/chart.module';
+
+// External Module
 import { ChartModule } from 'angular2-highcharts';
 
 @NgModule({
@@ -33,6 +36,7 @@ import { ChartModule } from 'angular2-highcharts';
   imports: [
     BrowserModule,
     TableAnalysisPageModule,
+    ChartPageModule,
     IonicModule.forRoot(MyApp),
     ChartModule.forRoot(require('highcharts'))
   ],
