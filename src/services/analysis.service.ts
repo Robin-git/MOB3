@@ -2,11 +2,11 @@ import { Injectable } from "@angular/core";
 
 export class Analysis {
   data: {
-    min: number;
+    min: number | string;
     dateMin: Date | string;
-    max: number;
+    max: number | string;
     dateMax: Date | string;
-    average: number;
+    average: number | string;
   };
 
   constructor(public name: string) {
@@ -26,39 +26,35 @@ export class AnalysisService {
 
   formatData(file: string[][]): Analysis[] {
     let analysises: Analysis[] = [];
-    for (let x = 1; x < file[1].length - 1; x++) {
+    for (let x = 1; x < file[1].length; x++) {
       let analysis: Analysis = new Analysis(file[1][x]);
-      let tempMax: number = parseInt(file[3][x]);
+      analysis.data.max = null;
+      analysis.data.min = null;
       let indexMax: number = x;
-      let tempMin: number = parseInt(file[3][x]);
       let indexMin: number = x;
       let tempAverage: number = 0;
       let nbValue = 0;
 
-      for (let y = 2; y < file.length - 1; y++) {
+      for (let y = 2; y < file.length; y++) {
         if (file[y][x] == " " || !file[y][x]) {
-          continue;
+          break;
         }
         let currentValue = parseInt(file[y][x]);
         if (isNaN(currentValue)) {
-          continue;
+          analysis.data.min = file[y][x];
+          break;
         }
         nbValue++;
         tempAverage += currentValue;
-        if (tempMax <= currentValue) {
-          tempMax = currentValue;
+        if (!analysis.data.max || analysis.data.max <= currentValue) {
+          analysis.data.max = currentValue;
           indexMax = y;
         }
-        if (tempMin >= currentValue) {
-          tempMin = currentValue;
+        if (!analysis.data.min || analysis.data.min >= currentValue) {
+          analysis.data.min = currentValue;
           indexMin = y;
         }
       }
-      if (isNaN(tempMax)) {
-          console.log(tempMax);
-      }
-      analysis.data.max = tempMax;
-      analysis.data.min = tempMin;
       analysis.data.dateMax = file[indexMax][0];
       analysis.data.dateMin = file[indexMin][0];
       analysis.data.average = tempAverage / nbValue;
