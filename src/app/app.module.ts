@@ -23,6 +23,7 @@ import { ErrorService } from '../services/error.service';
 
 // Module
 import { TableAnalysisPageModule } from '../pages/table-analysis/table-analysis.module';
+import { ChartModule } from 'angular2-highcharts';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { TableAnalysisPageModule } from '../pages/table-analysis/table-analysis.
   imports: [
     BrowserModule,
     TableAnalysisPageModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    ChartModule.forRoot(require('highcharts'))
   ],
   bootstrap: [IonicApp],
   entryComponents: [
