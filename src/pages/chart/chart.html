@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Chart</ion-title>
+    <ion-title>{{ analyseSelected.name }}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -17,13 +17,10 @@
 
   <ion-slides>
     <ion-slide>
-      <h1>Slide 1</h1>
+      <average-hourly-graph [dataPerHours]="dataPerHours"></average-hourly-graph>
     </ion-slide>
     <ion-slide>
       <h1>Slide 2</h1>
-    </ion-slide>
-    <ion-slide>
-      <h1>Slide 3</h1>
     </ion-slide>
   </ion-slides>
 

@@ -9,7 +9,7 @@
   <ion-navbar>
 
     <ion-buttons end>
-      <button ion-button icon-only (click)="goToChart()">
+      <button ion-button icon-only>
         <ion-icon name="stats"></ion-icon>
       </button>
     </ion-buttons>
@@ -31,13 +31,13 @@
       <ion-col col-1>Max</ion-col>
       <ion-col col-2>Heure du max</ion-col>
     </ion-row>
-    <ion-row *ngFor="let analysis of analysises">
+    <ion-row *ngFor="let analysis of analysises" (click)="goToChart(analysis)">
       <ion-col col-3>{{ analysis.name }}</ion-col>
-      <ion-col col-1>{{ analysis.data.min }}</ion-col>
-      <ion-col col-2>{{ analysis.data.dateMin | date: 'HH:mm:ss' }}</ion-col>
-      <ion-col col-3>{{ analysis.data.average | number : '1.2-2' }}</ion-col>
-      <ion-col col-1>{{ analysis.data.max }}</ion-col>
-      <ion-col col-2>{{ analysis.data.dateMax | date: 'HH:mm:ss' }}</ion-col>
+      <ion-col col-1>{{ analysis.report.min }}</ion-col>
+      <ion-col col-2>{{ analysis.report.dateMin | date: 'HH:mm:ss' }}</ion-col>
+      <ion-col col-3>{{ analysis.report.average | number : '1.2-2' }}</ion-col>
+      <ion-col col-1>{{ analysis.report.max }}</ion-col>
+      <ion-col col-2>{{ analysis.report.dateMax | date: 'HH:mm:ss' }}</ion-col>
     </ion-row>
   </ion-grid>
 
