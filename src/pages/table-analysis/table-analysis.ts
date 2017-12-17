@@ -38,6 +38,7 @@ export class TableAnalysisPage {
    * Push ChartPage onto the navigation stack.
    */
   goToChart(analyseSelected: Analysis) {
+    this.uiService.presentLoader("Chargement des graphiques");
     this.navCtrl.push(ChartPage, { analyseSelected: analyseSelected });
   }
 

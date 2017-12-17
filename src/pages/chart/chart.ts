@@ -6,6 +6,7 @@ import { ScreenOrientation } from "@ionic-native/screen-orientation";
 import { Analysis } from "../../class/Analysis";
 
 import { AnalysisService } from "../../services/analysis.service";
+import { InteractionService } from "../../services/interaction.service";
 
 /**
  * Generated class for the ChartPage page.
@@ -25,7 +26,8 @@ export class ChartPage {
   constructor(
     navParams: NavParams,
     private screenOrientation: ScreenOrientation,
-    analyseService: AnalysisService
+    analyseService: AnalysisService,
+    private uiService: InteractionService
   ) {
     this.analyseSelected = navParams.get("analyseSelected") as Analysis;
     this.dataPerHours = analyseService.generateDataPerHours(
@@ -37,6 +39,7 @@ export class ChartPage {
     await this.screenOrientation.lock(
       this.screenOrientation.ORIENTATIONS.PORTRAIT
     );
+    this.uiService.loader.dismiss();
   }
 
   ionViewWillLeave() {
