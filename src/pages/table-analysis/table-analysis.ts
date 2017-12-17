@@ -1,9 +1,13 @@
 import { Component } from "@angular/core";
-import { IonicPage, NavParams } from "ionic-angular";
+import { IonicPage, NavParams, NavController } from "ionic-angular";
 
 import { InteractionService } from "../../services/interaction.service";
 import { ParserService } from "../../services/parser.service";
-import { AnalysisService, Analysis } from "../../services/analysis.service";
+import { AnalysisService } from "../../services/analysis.service";
+
+import { ChartPage } from "../chart/chart";
+
+import { Analysis } from "../../class/Analysis";
 
 /**
  * Generated class for the TableAnalysisPage page.
@@ -24,9 +28,18 @@ export class TableAnalysisPage {
     private navParams: NavParams,
     private uiService: InteractionService,
     private parserService: ParserService,
-    private analysisService: AnalysisService
+    private analysisService: AnalysisService,
+    private navCtrl: NavController
   ) {
     this.fileSelected = this.navParams.get("file");
+  }
+
+  /**
+   * Push ChartPage onto the navigation stack.
+   */
+  goToChart(analyseSelected: Analysis) {
+    this.uiService.presentLoader("Chargement des graphiques");
+    this.navCtrl.push(ChartPage, { analyseSelected: analyseSelected });
   }
 
   async ionViewDidLoad() {
@@ -34,7 +47,7 @@ export class TableAnalysisPage {
       this.uiService.presentLoader("Analyse du fichier en cours...");
       const allData = await this.parserService.parserFile(this.fileSelected);
       this.analysises = this.analysisService
-        .formatData(allData)
+        .dataTable(allData)
         .sort(this.sortAnalysis);
       this.uiService.presentToast("Fichier analysé avec succés !");
     } catch (err) {

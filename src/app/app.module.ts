@@ -14,6 +14,7 @@ import { FileChooser } from '@ionic-native/file-chooser';
 import { FileTransfer } from '@ionic-native/file-transfer';
 import { FilePath } from "@ionic-native/file-path";
 import { File } from '@ionic-native/file';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
 // Services
 import { UploadService } from '../services/upload.service';
@@ -22,7 +23,9 @@ import { InteractionService } from '../services/interaction.service';
 import { ErrorService } from '../services/error.service';
 
 // Module
+import { ComponentsModule } from '../components/components.module';
 import { TableAnalysisPageModule } from '../pages/table-analysis/table-analysis.module';
+import { ChartPageModule } from '../pages/chart/chart.module';
 
 @NgModule({
   declarations: [
@@ -31,7 +34,9 @@ import { TableAnalysisPageModule } from '../pages/table-analysis/table-analysis.
   ],
   imports: [
     BrowserModule,
+    ComponentsModule,
     TableAnalysisPageModule,
+    ChartPageModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -44,6 +49,7 @@ import { TableAnalysisPageModule } from '../pages/table-analysis/table-analysis.
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     File,
+    ScreenOrientation,
     FileChooser,
     FileTransfer,
     FilePath,
