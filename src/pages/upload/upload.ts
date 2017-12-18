@@ -39,7 +39,7 @@ export class UploadPage implements OnInit {
       const uri = await this.fileChooser.open();
       this.uiService.presentLoader("Importation...");
       await this.uploadService.upload(uri);
-      this.uiService.presentToast("Le fichier à était importé avec succès.");
+      this.uiService.presentToast("Le fichier a été importé avec succès.");
       await this.updateDataList();
     } catch (err) {
       this.errorService.handleError(err);
@@ -62,7 +62,7 @@ export class UploadPage implements OnInit {
     } finally {
       this.updateDataList()
       this.uiService.loader.dismiss();
-      this.uiService.presentToast(`Le fichier ${item} à étais supprimé avec succés !`);
+      this.uiService.presentToast(`Le fichier ${item} a été supprimé avec succés !`);
     }
   }
 
